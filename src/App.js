@@ -9,6 +9,7 @@ class App extends React.Component {
     super();
     this.state = {
       todoList,
+      test:'',
       formInput:''
     }
   }
@@ -21,18 +22,32 @@ class App extends React.Component {
   };
   // handle submit
   submitHandle = (event)=>{
-      event.preventDefault();
-      if(this.state.formInput != ''){
-          this.addTask(event, this.state.formInput);
+    event.preventDefault();
+    if(this.state.formInput != ''){
+      this.addTask(event, this.state.formInput);
       this.setState({
       formInput: ''
       });
-      }
-      if (typeof(Storage) !== "undefined") {
-      }
-      localStorage.setItem(todoList, this.state.todoList);
-      console.log(JSON.stringify(localStorage.getItem(todoList)))
-    };
+    }
+  };
+  componentWillMount(){
+    localStorage.getItem('todoList') && this.setState({
+      todoList: JSON.parse(localStorage.getItem('todoList')),
+      isLoading: false
+    })
+  }
+
+  componentDidMount(){
+    if(!localStorage.getItem('todoList')){
+      debugger
+    }else{
+      console.log('using data...')
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState){
+    localStorage.setItem('todoList', JSON.stringify(nextState.todoList));
+  }
     
 // add task item
   addTask = (event, taskName)=>{
